@@ -65,12 +65,25 @@ void epd_hw_init(void) {
   ESP_LOGI(TAG, "GPIO + SPI initialized");
 }
 
+// A single SPI transaction on the ESP32-S3's GP-SPI peripheral is hardware-
+// limited to well under EPD_BUFFER_SIZE regardless of the max_transfer_sz
+// configured at bus-init time (that only bounds DMA descriptor allocation,
+// not one transaction's length). Bulk writes are chunked here; CS stays
+// asserted across all chunks since the caller toggles it once for the whole
+// buffer.
+#define EPD_SPI_MAX_CHUNK_BYTES 4092
+
 static void epd_spi_write(const uint8_t *data, size_t len) {
-  spi_transaction_t t = {
-      .length = len * 8,
-      .tx_buffer = data,
-  };
-  ESP_ERROR_CHECK(spi_device_polling_transmit(s_spi, &t));
+  while (len > 0) {
+    size_t chunk = len > EPD_SPI_MAX_CHUNK_BYTES ? EPD_SPI_MAX_CHUNK_BYTES : len;
+    spi_transaction_t t = {
+        .length = chunk * 8,
+        .tx_buffer = data,
+    };
+    ESP_ERROR_CHECK(spi_device_polling_transmit(s_spi, &t));
+    data += chunk;
+    len -= chunk;
+  }
 }
 
 static void EPD_WriteCMD(uint8_t command) {
