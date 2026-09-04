@@ -16,5 +16,8 @@ void app_main(void) {
            "Immediately displaying image B (splash screen) -- ghosting stress test");
   EPD_DisplayFull(epd_bitmap_splash_screen);
 
+  ESP_LOGI(TAG, "Putting panel to sleep");
+  EPD_Sleep();
+
   ESP_LOGI(TAG, "Done -- inspect panel for retained ghosting from image A");
 }

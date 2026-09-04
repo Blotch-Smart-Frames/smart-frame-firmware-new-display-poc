@@ -40,3 +40,7 @@ void EPD_init(void);
 // Writes a full-screen 1bpp image buffer (EPD_BUFFER_SIZE bytes, MSB-first,
 // row-byte-aligned, 0xFF = white) and triggers a full refresh.
 void EPD_DisplayFull(const uint8_t *image);
+
+// Puts the panel into deep sleep and powers it down. Call once done driving
+// the display; a new EPD_Reset()+EPD_init() is required to wake it again.
+void EPD_Sleep(void);

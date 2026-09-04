@@ -196,3 +196,14 @@ void EPD_DisplayFull(const uint8_t *image) {
   EPD_WriteDataBuffer(image, EPD_BUFFER_SIZE);
   EPD_FullRefresh();
 }
+
+// Ported from epd.cpp's EPD::sleep(): never cut power while a waveform is
+// still running, so guard with a busy-wait even though callers should
+// already be idle after EPD_DisplayFull()'s own wait.
+void EPD_Sleep(void) {
+  lcd_chkstatus();
+  EPD_WriteCMD(0x10);  // Enter deep sleep.
+  EPD_WriteDATA(0x01);
+  epd_delay_ms(100);
+  gpio_set_level(EPD_PIN_EN, 0);  // Power down the panel.
+}
