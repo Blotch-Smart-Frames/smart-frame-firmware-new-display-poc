@@ -10,15 +10,15 @@ faint remnants of the first image bleeding through the second.
 
 ## Wiring
 
-| Signal        | ESP32-S3 GPIO |
-|---------------|---------------|
-| MOSI          | 11            |
-| SCLK          | 12            |
-| CS            | 10            |
-| DC            | 13            |
-| RESET         | 14            |
-| BUSY          | 21            |
-| Power enable  | 15            |
+| Signal       | ESP32-S3 GPIO |
+| ------------ | ------------- |
+| MOSI         | 11            |
+| SCLK         | 12            |
+| CS           | 10            |
+| DC           | 13            |
+| RESET        | 14            |
+| BUSY         | 21            |
+| Power enable | 15            |
 
 Pin mapping reused from the existing smart-frame-firmware 13.3" panel wiring.
 
